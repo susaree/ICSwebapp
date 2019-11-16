@@ -1,0 +1,33 @@
+﻿@using Microsoft.AspNet.Identity
+@using WebApplication3.Extentions
+@using WebApplication3.Models
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        @if (Request.IsAuthenticated)
+        {
+           
+            @Html.ActionLink(User.Identity.GetCompanyName(), "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+
+
+        }
+        else
+        {
+            @Html.ActionLink("ICS Northern Ltd", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+
+
+        }
+
+    </div>
+
+    <div class="navbar-collapse collapse">
+        <ul class="nav navbar-nav">
+            <li>@Html.ActionLink("Home", "Index", "Home")</li>
+            <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+        </ul>
+        @Html.Partial("_LoginPartial")
+
+    </div>

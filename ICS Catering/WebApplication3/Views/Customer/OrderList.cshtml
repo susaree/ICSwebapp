@@ -1,0 +1,114 @@
+﻿@using PagedList
+@using PagedList.Mvc
+
+@model IPagedList<WebApplication3.Models.Order>
+
+
+@{
+    ViewBag.Title = "OrderList";
+}
+
+<h2>Order List</h2>
+
+<div class="col-md-6">
+    @using (Html.BeginForm("OrderList", "Customer"))
+    {
+        <p>
+            Find by name: <input type="text" name="searchString" value="" />
+            ...
+            <input type="submit" value="Search" />
+
+        </p>
+    }
+    <ul class="list-group" id="ItemList">
+        @{ var count = 0;}
+        @foreach (var c in Model)
+
+        {
+            count++;
+
+            <li class="list-group-item clearfix">
+                <div class="checkbox">
+                    <input type="checkbox" id="Check_@c.Id" checked="@c.IsSelected" value="@c.Name"/>
+                    <label for="Check_@c.Name"></label>
+                </div>
+                <div class="col-xs-12">@c.Name</div>
+
+                <span class="pull-right">
+                    <span class="btn btn-xs btn-default" onclick="location.href='@Url.Action("DownloadOrder", "Customer", new { fileName = @c.Name })'">
+                        <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
+                    </span>
+
+                    <span class="btn btn-xs btn-default" onclick="location.href='@Url.Action("DownloadImportableOrder", "Customer", new { fileName = @c.Name })'">
+                        <span class="glyphicon glyphicon-upload" aria-hidden="true"></span>
+                    </span>
+
+                </span>
+            </li>
+
+
+
+        }
+
+    <li class="list-group-item">
+
+        <a class="btn btn-success btn-block" onclick="SaveList()">Create Selected Orders</a>
+        <a class="btn btn-success btn-block" onclick="location.href='@Url.Action("DownloadSelected", "Customer")'">Download Selected (FIRST TICK DESIRED BOXES AND PRESS CREATE)</a>
+
+    </li>
+
+        <p><input type="button" class="btn btn-default" value="Go Back &raquo;" onclick="location.href='@Url.Action("CustomerList", "Customer")'" /></p>
+        <p><input type="button" class="btn btn-default" value="Clear all orders &raquo;" onclick="location.href='@Url.Action("ClearOrders", "Customer")'" /></p>
+        <p><input type="button" class="btn btn-default" value="Download All Orders for Sage &raquo;" onclick="location.href='@Url.Action("DownloadAllImportableOrders", "Customer")'" /></p>
+        <p><input type="button" class="btn btn-default" value="Download Sage Importer Test &raquo;" onclick="location.href='@Url.Action("DownloadSageUploaderTest", "Customer")'" /></p>
+        <p><input type="button" class="btn btn-default" value="Download Sage Importer Fiyaz &raquo;" onclick="location.href='@Url.Action("DownloadSageUploaderFiyaz", "Customer")'" /></p>
+        <p><input type="button" class="btn btn-default" value="Download Sage Importer Main &raquo;" onclick="location.href='@Url.Action("DownloadSageUploaderMain", "Customer")'" /></p>
+        <h2>@count total orders</h2>
+        @Html.PagedListPager(Model, page => Url.Action("OrderList", new { page }))
+
+
+    </ul>
+</div>
+
+
+<script>
+    var SaveList = function () {
+     
+        var arrName = [];
+        var commaSeperatedIds = "";
+
+        $("#ItemList li input[type=checkbox]").each(function (index, val) {
+
+            var checkId = $(val).attr("Id");
+
+       
+            var value = $(this).val();
+            var Ischecked = $("#" + checkId).is(":checked", true);
+            if (Ischecked) {
+                arrName.push(value);
+            }
+
+            
+  
+
+
+        })
+
+        if (arrName.length != 0) {
+                commaSeperatedIds = arrName.toString();
+                      $.ajax({
+                    type: "GET",
+                    url: '@Url.Action("BatchDownload", "Customer")',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                       data: {
+                           ItemList: commaSeperatedIds
+                    },
+
+                      })
+          
+        }
+    }
+
+
+</script>

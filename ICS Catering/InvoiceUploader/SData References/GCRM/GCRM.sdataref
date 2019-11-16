@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SDataReference xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Uris>
+    <string>http://localhost:5495/sdata/accounts50/GCRM/-/$schema</string>
+  </Uris>
+  <Files />
+  <Name>GCRM</Name>
+  <AllowNonComVisibleTypes>true</AllowNonComVisibleTypes>
+</SDataReference>

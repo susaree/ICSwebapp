@@ -1,0 +1,41 @@
+﻿@using WebApplication3.Models;
+@{
+    ViewBag.Title = "ShoppingCart";
+}
+
+<h2>Cart</h2>
+
+@{ double sum = 0; }
+
+@foreach (var cart in (List<Cart>)Session["Cart"])
+{
+
+    <a class="list-group-item clearfix">
+        <div class="col-xs-7">Product: @cart.Product.Name</div>
+        <div class="col-xs-4">Price: £@cart.Product.ListPrice</div>
+        <div class="col-xs-4">Quantity: @cart.Quantity</div>
+        <div class="col-xs-4">Sub-total: £@(double.Parse(cart.Product.ListPrice) * cart.Quantity)</div>
+
+        <span class="pull-right">
+            <span class="btn btn-xs btn-default" onclick="location.href='@Url.Action("MinusQuantity", "Product", new { id = cart.Product.Id})'">
+                <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+            </span>
+            <span class="btn btn-xs btn-default" onclick="location.href='@Url.Action("AddQuantity", "Product", new { id = cart.Product.Id})'">
+                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+            </span>
+            <span class="btn btn-xs btn-default" onclick="location.href='@Url.Action("Remove", "Product", new { id= cart.Product.Id})'">
+                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+            </span>
+        </span>
+    </a>
+
+    double subTotal = double.Parse(cart.Product.ListPrice) * cart.Quantity;
+    sum += subTotal;
+}
+
+<span class="pull-right">
+    <h1>Total: £@sum</h1>
+</span>
+<p><input type="button" class="btn btn-default" value="Go Back &raquo;" onclick="location.href='@Url.Action("ProductList", "Product")'" /></p>
+<p><input type="button" class="btn btn-default" value="Submit &raquo;" onclick="location.href='@Url.Action("ThankYou", "Product")'" /></p>
+

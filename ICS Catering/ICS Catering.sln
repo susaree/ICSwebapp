@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29306.81
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplication3", "WebApplication3\WebApplication3.csproj", "{12D3E330-BCDD-4194-9D30-927C18B082BB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InvoiceUploader", "InvoiceUploader\InvoiceUploader.csproj", "{4135E0FD-5333-4C82-B1B9-FADBE2EDE9B5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{12D3E330-BCDD-4194-9D30-927C18B082BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{12D3E330-BCDD-4194-9D30-927C18B082BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{12D3E330-BCDD-4194-9D30-927C18B082BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{12D3E330-BCDD-4194-9D30-927C18B082BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4135E0FD-5333-4C82-B1B9-FADBE2EDE9B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4135E0FD-5333-4C82-B1B9-FADBE2EDE9B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4135E0FD-5333-4C82-B1B9-FADBE2EDE9B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4135E0FD-5333-4C82-B1B9-FADBE2EDE9B5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E1E46DCC-3451-4EAC-981F-41C1C75F03A1}
+	EndGlobalSection
+EndGlobal

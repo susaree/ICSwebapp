@@ -1,0 +1,229 @@
+﻿@using Microsoft.AspNet.Identity
+@using WebApplication3.Extentions
+@using PagedList
+@using PagedList.Mvc
+
+@model IPagedList<WebApplication3.Models.Product>
+
+
+@{
+    ViewBag.Title = "ProductList";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<body>
+
+    <h3>List of Products</h3>
+    
+    <div class="container">
+
+        <p><a class="btn btn-default" onclick="location.href='@Url.Action("ProductList", "Product", new { searchString = ""})'">Full List &raquo;</a></p>
+        <p><a class="btn btn-default" onclick="location.href='@Url.Action("ShoppingCart", "Product" )'">View Basket &raquo;</a></p>
+        <p><a class="btn btn-default" onclick="location.href='@Url.Action("ProductList", "Product", new { sortBy = ViewBag.SortCategoryPara})'">Sort By Category &raquo;</a></p>
+        <p><a class="btn btn-default" onclick="location.href='@Url.Action("ProductList", "Product", new { sortBy = ViewBag.SortNamePara})'">Sort By Name &raquo;</a></p>
+        <h2>Please input desired quantities and press 'Add All' at the bottom of the page</h2>
+  
+        @using (Html.BeginForm("ProductList", "Product"))
+        {
+            <p>
+                Find by name or category: <input type="text" name="searchString" value="" />
+                ...
+                <input type="submit" value="Search" />
+
+            </p>
+        }
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="list-group" id="ItemList">
+
+                    @foreach (var c in Model)
+                    {
+
+                        var category = c.Category;
+                        var categoryDesc = "default";
+
+                        switch (category)
+                        {
+                            case "1":
+                                categoryDesc = "Soft Drinks";
+                                break;
+                            case "2":
+                                categoryDesc = "Oils";
+                                break;
+                            case "3":
+                                categoryDesc = "Flours";
+                                break;
+                            case "4":
+                                categoryDesc = "Rice";
+                                break;
+                            case "5":
+                                categoryDesc = "Tinned Fruit /Veg";
+                                break;
+                            case "6":
+                                categoryDesc = "Fresh Fruit /Veg";
+                                break;
+                            case "7":
+                                categoryDesc = "Spices";
+                                break;
+                            case "8":
+                                categoryDesc = "Sauces";
+                                break;
+                            case "9":
+                                categoryDesc = "Condiments";
+                                break;
+                            case "10":
+                                categoryDesc = "Frozen";
+                                break;
+                            case "11":
+                                categoryDesc = "Chilled";
+                                break;
+                            case "12":
+                                categoryDesc = "Desserts";
+                                break;
+                            case "13":
+                                categoryDesc = "Milkshake";
+                                break;
+                            case "14":
+                                categoryDesc = "Indian";
+                                break;
+                            case "15":
+                                categoryDesc = "Chinese";
+                                break;
+                            case "16":
+                                categoryDesc = "Pizza";
+                                break;
+                            case "17":
+                                categoryDesc = "Packaging";
+                                break;
+                            case "18":
+                                categoryDesc = "Cleaning Products";
+                                break;
+                            case "19":
+                                categoryDesc = "General";
+                                break;
+                        }
+
+
+
+
+                        if (!c.Id.Equals("") && c.Category.Equals(category))
+                        {
+
+                            <li class="list-group-item clearfix">
+                                <div class="col-xs-7">@c.Name</div>
+                                <div class="col-xs-5">£@c.ListPrice</div>
+                                <div class="col-xs-4">@categoryDesc</div>
+
+
+
+
+                                <span class="pull-right">
+                                    @if (User.Identity.GetCompanyName().ToString().Equals("ADMIN"))
+                                    {
+                                        <span class="btn btn-xs btn-default" onclick="location.href='@Url.Action("ExportPriceList", "Customer", new { name = c.Name})'">
+                                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                        </span>
+                                    }
+                                    else
+                                    {
+
+                                        using (Html.BeginForm("AddToCart", "Product", new { id = c.Id, name = c.Name, price = c.ListPrice, taxCode = c.TaxCode }))
+                                        {
+                                            <span class="text-box">
+                                                Quantity: <input type="text" id="Quant_@c.Id" style="width: 50px" name="quantity" value="" />
+                                                ...
+                                                <input type="submit" value="Add" />
+
+
+                                            </span>
+                                        }
+
+
+
+                                    }
+
+                                </span>
+                            </li>
+
+                        }
+
+                    }
+
+                    <li class="list-group-item">
+                        <input type="button" id="btnSend" value="Add All (Press once and wait for alert)" />
+                    </li>
+
+                    @Html.PagedListPager(Model, page => Url.Action("ProductList", new { page }))
+
+                </ul>
+            </div>
+
+        </div>
+
+
+    </div>
+
+    <script src="~/Scripts/jquery-3.3.1.js"></script>
+    <script type="text/javascript">
+        $(function ()
+        {
+            $('#btnSend').click(function ()
+            {
+                var arrQuant = [];
+                var arrId = [];
+                var commaSeperatedQuants = "";
+                var commaSeperatedIds = "";
+
+                $("#ItemList li input[type=text]").each(function (index, val)
+                {
+
+                    var checkId = $(val).attr("Id");
+
+                    var arr = checkId.split('_');
+                    var currentCheckboxId = arr[1];
+
+                    var inp = $("#Quant_" + currentCheckboxId);
+                    if (inp.val().length > 0) {
+                        arrQuant.push(inp.val());
+                        arrId.push(currentCheckboxId)
+                    }
+
+
+                })
+
+                if (arrQuant.length != 0) {
+
+                    commaSeperatedQuants = arrQuant.toString();
+                    commaSeperatedIds = arrId.toString();
+
+                     $.ajax({
+                    type: "GET",
+                    url: '@Url.Action("SaveList", "Product")',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: {
+                        ItemList: commaSeperatedIds,
+                        ItemList2: commaSeperatedQuants,
+                        page: 1
+                    },
+                    success: function (reply) {
+                       alert("Successfully added to cart")
+                         },
+                         error: function (response) {
+                             location.reload();
+                             alert("Successfully added to basket, please press View Basket")
+                             
+                         }
+                  
+                })
+                }
+
+               
+            })
+        })
+
+    </script>
+
+
+</body>

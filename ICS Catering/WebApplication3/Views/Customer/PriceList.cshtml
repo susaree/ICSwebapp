@@ -1,0 +1,55 @@
+﻿@using Microsoft.AspNet.Identity
+@using WebApplication3.Extentions
+
+
+@{
+    ViewBag.Title = "PriceList";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Price List</h2>
+
+<body>
+
+    <h3>List of Products</h3>
+    @if (Request.IsAuthenticated)
+    {
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="list-group">
+                        @foreach (var c in ViewBag.PriceList)
+
+                        {
+                        <a class="list-group-item clearfix">
+                            <div class="col-xs-1">@c.Id</div>
+                            <div class="col-xs-3">@c.Name</div>
+                            <div class="col-xs-5">£@(c.ListPrice)</div>
+
+                            @if (!(User.Identity.GetCompanyName().Equals("ADMIN")))
+                            {
+                                <span class="pull-right">
+                                    <span class="btn btn-xs btn-default" onclick="location.href='@Url.Action("AddToCart", "Product", new { id = c.Id, name = c.Name, price = c.ListPrice})'">
+                                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                    </span>
+
+                                </span>
+                            }
+
+                        </a>
+
+                        }
+                       
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    }
+
+
+
+</body>
+
+

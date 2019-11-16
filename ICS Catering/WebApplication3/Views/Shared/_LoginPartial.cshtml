@@ -1,0 +1,97 @@
+﻿@using Microsoft.AspNet.Identity
+@using WebApplication3.Models
+@if (Request.IsAuthenticated)
+{
+    using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+    {
+
+        @Html.AntiForgeryToken()
+
+
+
+        <ul class="nav navbar-nav navbar-right">
+            <li>
+
+                @Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
+            </li>
+            <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+            <span class="btn btn-group-lg btn-default" onclick="location.href='@Url.Action("GoToCart", "Product")'">
+                <span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span>
+            </span>
+            @{ double sum = 0;
+                int count = 0;
+                List<Cart> cartList = (List<Cart>)Session["Cart"];
+                if (cartList != null)
+                {
+                    count = cartList.Count;
+                }
+            }
+            <li class="dropdown dropdown-large">
+                <a data-toggle="dropdown" class="dropdown-toggle" href="#">Cart(@count) <b class="caret"></b></a>
+                <ul class="dropdown-menu scrollable-menu">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <li class="dropdown-header">Shopping cart:</li>
+                            <li class="divider"></li>
+                            @if (Session["Cart"] != null)
+                            {
+
+                                foreach (Cart cart in (List<Cart>)Session["Cart"])
+                                {
+
+                                    <li><a href="#">@cart.Product.Name (@cart.Quantity)</a></li>
+                                    <a class="list-group-item clearfix">
+                                        <li><div class="col-xs-7">Product: @cart.Product.Name</div></li>
+                                        <li><div class="col-xs-3">Price: £@Convert.ToDecimal(cart.Product.ListPrice)</div></li>
+                                        <li><div class="col-xs-4">Quantity: @cart.Quantity</div></li>
+                                        <li><div class="col-xs-3">Sub-total: £@Convert.ToDecimal((double.Parse(cart.Product.ListPrice) * cart.Quantity))</div></li>
+
+                                        <span class="pull-right">
+                                            <span class="btn btn-xs btn-default" onclick="location.href='@Url.Action("MinusQuantity", "Product", new { id = @cart.Product.Id})'">
+                                                <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+                                            </span>
+                                            <span class="btn btn-xs btn-default" onclick="location.href='@Url.Action("AddQuantity", "Product", new { id = @cart.Product.Id})'">
+                                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                            </span>
+                                            <span class="btn btn-xs btn-default" onclick="location.href='@Url.Action("Remove", "Product", new { id= @cart.Product.Id})'">
+                                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                            </span>
+                                        </span>
+                                    </a>
+
+                                    double subTotal = double.Parse(cart.Product.ListPrice) * cart.Quantity;
+                                    sum += subTotal;
+                                }
+                                <li>
+                                    <span class="pull-right">
+                                        <h2>Total: £@sum </h2>
+                                    </span>
+
+                                    <p><input type="button" class="btn btn-default" value="Go Back &raquo;" onclick="location.href='@Url.Action("ProductList", "Product")'" /></p>
+                                    <p><input type="button" class="btn btn-default" value="Submit &raquo;" onclick="location.href='@Url.Action("ThankYou", "Product")'" /></p>
+                                </li>
+
+                            }
+
+                        </div>
+
+                    </div>
+
+
+
+
+                </ul>
+            </li>
+        </ul>
+    }
+}
+else
+{
+   
+    <ul class="nav navbar-nav navbar-right">
+
+
+        <li>@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+
+    </ul>
+}

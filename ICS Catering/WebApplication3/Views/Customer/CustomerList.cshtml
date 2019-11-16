@@ -1,0 +1,135 @@
+﻿@using Microsoft.AspNet.Identity
+@using WebApplication3.Models;
+@using WebApplication3.Extentions
+@using WebApplication3.Controllers
+@using PagedList
+@using PagedList.Mvc
+
+@model IPagedList<WebApplication3.Models.UserModel>
+
+@{
+    ViewBag.Title = "Home";
+}
+
+
+@if (User.Identity.GetCompanyName().ToString().Equals("ADMIN"))
+{
+    <h2>Hello Admin</h2>
+    <div class="container">
+
+        @using (Html.BeginForm("CustomerList", "Customer"))
+        {
+            <p>
+                Find by name: <input type="text" name="searchString" value="" />
+                ...
+                <input type="submit" value="Search" />
+
+            </p>
+        }
+
+        <div class="row">
+            <div class="col-md-12">
+
+                <div class="list-group">
+                    @foreach (var c in Model)
+
+                    {
+                        <a class="list-group-item clearfix">
+                            <div class="col-xs-3">@c.Id</div>
+                            <div class="col-xs-3">@c.Name</div>
+
+
+                            <span class="pull-right">
+                                <span class="btn btn-xs btn-default" onclick="location.href='@Url.Action("PriceList", "Customer", new { companyName = c.Name})'">
+                                    <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+                                </span>
+
+                                <span class="btn btn-xs btn-default" onclick="location.href='@Url.Action("ExportPriceList", "Customer", new { companyName = c.Name })'">
+                                    <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
+                                </span>
+
+                            </span>
+                        </a>
+
+                    }
+
+                    <p><input type="button" class="btn btn-default" value="View Orders &raquo;" onclick="location.href='@Url.Action("OrderList", "Customer")'" /></p>
+
+                    @using (Html.BeginForm("ImportPriceList", "Customer", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        @Html.Raw(ViewBag.Error)
+                        <span>Search for updated pricelistandstock sheet</span><input type="file" name="excelFile" />
+                        <br />
+                        <input type="submit" value="Upload" />
+                    }
+
+                    <ul class="nav navbar-nav navbar-right">
+
+
+                        <li> @Html.ActionLink("Upload New Users", "UploadUsers", "Account")</li>
+
+
+                    </ul>
+
+                    @Html.PagedListPager(Model, page => Url.Action("CustomerList", new { page }))
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+}
+else
+{
+    <div class="jumbotron">
+        @if (Request.IsAuthenticated)
+        {
+
+            <h1>@User.Identity.GetCompanyName()</h1>
+            <p class="lead">Press the below button to view your product list</p>
+            <p><a class="btn btn-default btn-lg" onclick="location.href='@Url.Action("ProductList", "Product")'">Place Your Order &raquo;</a></p>
+
+        }
+        else
+        {
+            <h1>ICS Catering</h1>
+            <p>We cater for over 130 companies nationwide, check out our collection!</p>
+            <p class="lead">Press the button below to view all products</p>
+            <p><a class="btn btn-default btn-lg" onclick="location.href='@Url.Action("ProductListFull", "Product")'">Product List &raquo;</a></p>
+        }
+
+    </div>
+
+    if (!Request.IsAuthenticated)
+    {
+        <div class="row">
+            <div class="col-md-4">
+                <h2>Sign in</h2>
+                <p>
+                    Sign in to place an order
+                </p>
+
+                <p><a class="btn btn-default" onclick="location.href='@Url.Action("Login", "Account")'">Login &raquo;</a></p>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            <div class="col-md-4">
+                <h2>View All Products</h2>
+                <p>
+                    We cater for over 130 companies nationwide, check out our collection!
+                </p>
+
+                <p><a class="btn btn-default" onclick="location.href='@Url.Action("ProductListFull", "Product")'">Product List &raquo;</a></p>
+            </div>
+        </div>
+    }
+
+}
+
+
+
+
+

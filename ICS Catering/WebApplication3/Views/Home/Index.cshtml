@@ -1,0 +1,40 @@
+﻿@using Microsoft.AspNet.Identity
+@using WebApplication3.Extentions
+@{
+    ViewBag.Title = "Home Page";
+}
+
+
+@if (!User.Identity.GetCompanyName().ToString().Equals("ADMIN"))
+{
+    <div class="jumbotron">
+        @if (Request.IsAuthenticated)
+        {
+
+            <h1>@User.Identity.GetCompanyName()</h1>
+            <p class="lead">Press the below button to view your product list</p>
+            <p><a class="btn btn-default btn-lg" onclick="location.href='@Url.Action("ProductList", "Product")'">Place Your Order &raquo;</a></p>
+
+        }
+        else
+        {
+            <h1>ICS Northern Ltd</h1>
+            <p> We cater for over 130 companies nationwide and provide over a thousand different products!</p>
+            <p><a class="btn btn-default btn-lg" onclick="location.href='@Url.Action("ProductListFull", "Product")'">View All Products &raquo;</a></p>
+            <p class="lead">Sign in to view your selection</p>
+            <p><a class="btn btn-default btn-lg" onclick="location.href='@Url.Action("Login", "Account")'">Sign In &raquo;</a></p>
+
+        }
+
+    </div>
+
+    
+}
+else
+{
+    @Html.Action("CustomerList", "Customer");
+}
+
+
+
+
