@@ -3,8 +3,8 @@ ASP .NET Framework web application
 
 This web app was created to digitalise a catering company's order and invoice system.
 
-Customers have access to an account stored on an SQL database utilising the Identity Framework.
-Customers are shown a page list of unique product list by iterating through an excel source document containing company names and pricelists.
+Customers have access to an account which is stored on an SQL database.
+Customers are shown a paged list of unique product list by iterating through an excel source document containing company names and pricelists.
 Lists are sortable by name/category and items can be searched for by name/category
 
 Orders are made by inputing values in the 'Quantity' textbox which passes list-item variable through to 
