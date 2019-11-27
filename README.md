@@ -12,4 +12,4 @@ an ASP .Net controller class via Ajax POST.
 Orders are saved on the server as an excel document written with the EPPlus library.
 
 Admin users can log on and view a paged list of customers fetched from an excel document iteration loop.
-All Orders can be compressed and downloaded.
+All Orders can be compressed and downloaded and then imported to Sage.
